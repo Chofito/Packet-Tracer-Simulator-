@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks.Sources;
 using PacketTracerSimulator.Enums;
+using PacketTracerSimulator.Extensions;
 using PacketTracerSimulator.Interfaces;
 using PacketTracerSimulator.Models;
 
@@ -10,27 +10,30 @@ namespace PacketTracerSimulator.Controllers
 {
     public class DeviceManager : IDeviceManager
     {
-        private bool _encrypt = false;
-        private Device SelectedDevice { get; set; }
-        private List<Device> Devices { get; set; } = new List<Device>();
+        public Device SelectedDevice { get; set; }
+        public List<Device> Devices { get; } = new List<Device>();
 
-
-        public void AddDevice(Device item)
+        public bool AddDevice(Device item)
         {
+            var temp = Devices.FirstOrDefault(x => x.Name == item.Name);
+            if (temp != null) return false;
+
             Devices.Add(item);
+            return true;
         }
 
-        public void RemoveDevice(string name)
+        public bool RemoveDevice(string name)
         {
+            var temp = Devices.FirstOrDefault(x => x.Name == name);
+            if (temp == null) return false;
+
             Devices.RemoveAll(x => x.Name == name);
+            return true;
         }
 
         public void ListAllDevices()
         {
-            Devices.ForEach(x =>
-            {
-                Console.WriteLine("Device Name: " + x.Name + " IP: " + x.Ipv4);
-            });
+            Devices.ForEach(x =>{Console.WriteLine("Device Name: " + x.Name + " ||" + " Type: " + x.Type.GetDescription() +  " ||" + " IP: " + x.Ipv4);});
         }
 
         public void ListRouters()
@@ -57,9 +60,14 @@ namespace PacketTracerSimulator.Controllers
             });
         }
 
-        public void SelectDevice(string name)
+        public bool SelectDevice(string name)
         {
-            SelectedDevice = Devices.Find(x => x.Name == name);
+            var temp = Devices.FirstOrDefault(x => x.Name == name);
+            if (temp == null) return false;
+
+
+            SelectedDevice = temp;
+            return true;
         }
 
         public void Ping(string to)
@@ -67,25 +75,24 @@ namespace PacketTracerSimulator.Controllers
             throw new System.NotImplementedException();
         }
 
-        public void ConnectTo(string to)
+        public bool ConnectTo(string to)
         {
             throw new System.NotImplementedException();
         }
 
-        public void EditDevice(Device data)
+        public bool EditDevice(Device data)
         {
-            var device = Devices.Find(x => x.Name == data.Name);
-            if (device != null) device = data;
+            var temp = Devices.FirstOrDefault(x => x.Name == data.Name || x.Ipv4.Ip == data.Ipv4.Ip);
+            if (temp != null) return false;
+
+            var index = Devices.FindIndex(x => x.Name == SelectedDevice.Name);
+            Devices[index] = data;
+            return true;
         }
 
-        public void SaveSession(string fileName)
+        public bool SaveSession(string fileName)
         {
             throw new System.NotImplementedException();
-        }
-
-        public void ConfigureSave(bool crypt)
-        {
-            _encrypt = crypt;
         }
     }
 }

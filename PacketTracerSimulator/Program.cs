@@ -1,11 +1,14 @@
-﻿namespace PacketTracerSimulator
+﻿using PacketTracerSimulator.Interfaces;
+
+namespace PacketTracerSimulator
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        private static readonly IPacketTracer PacketTracer = new PacketTracer();
+
+        public static void Main(string[] args)
         {
-            var packetTracer = new PacketTracer();
-            packetTracer.Start();
+            PacketTracer.Start();
         }
     }
 }

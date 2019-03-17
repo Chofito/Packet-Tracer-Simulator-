@@ -1,24 +1,26 @@
-﻿using PacketTracerSimulator.Models;
+﻿using System.Collections.Generic;
+using PacketTracerSimulator.Models;
 
 namespace PacketTracerSimulator.Interfaces
 {
     public interface IDeviceManager
     {
+        List<Device> Devices { get; }
+        Device SelectedDevice { get; set; }
         /// <summary>
         /// Creates a new device and adds it to the list. 
         /// </summary>
         /// <param name="item"></param>
-        void AddDevice(Device item);
-        void RemoveDevice(string name);
+        bool AddDevice(Device item);
+        bool RemoveDevice(string name);
         void ListAllDevices();
         void ListRouters();
         void ListSwitch();
         void ListPersonalComputers();
-        void SelectDevice(string name);
+        bool SelectDevice(string name);
         void Ping(string to);
-        void ConnectTo(string to);
-        void EditDevice(Device data);
-        void SaveSession(string fileName);
-        void ConfigureSave(bool crypt);
+        bool ConnectTo(string to);
+        bool EditDevice(Device data);
+        bool SaveSession(string fileName);
     }
 }

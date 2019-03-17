@@ -11,6 +11,7 @@ using PacketTracerSimulator.Enums;
 using PacketTracerSimulator.Extensions;
 using PacketTracerSimulator.Interfaces;
 using PacketTracerSimulator.Models;
+using PacketTracerSimulator.Models.Common;
 using Pastel;
 
 namespace PacketTracerSimulator
@@ -66,6 +67,7 @@ namespace PacketTracerSimulator
 
                         _temporalDevice.Name = comandos[2];
                         _temporalDevice.MacAddress = RandomString(48);
+                        _temporalDevice.Ipv4 = new Ipv4(){Ip = "", SubnetMask = ""};
                         _deviceManager.AddDevice(_temporalDevice);
                     }
                     else
@@ -86,21 +88,45 @@ namespace PacketTracerSimulator
                 case "edit":
                     if (comandos.Length == 3)
                     {
-                        switch (comandos[1])
+                        if (_deviceManager.SelectedDevice != null)
                         {
-                            case "name":
-                                _deviceManager.SelectedDevice.Name = comandos[3];
-                                break;
-                            case "ip":
-                                _deviceManager.SelectedDevice.Ipv4.Ip = comandos[3];
-                                break;
-                            case "subnetmask":
-                                _deviceManager.SelectedDevice.Ipv4.SubnetMask = comandos[3];
-                                break;
-                            default:
-                                WriteLine("Unknown command: " + comandos[2].PastelUnderLine(Color.Red));
-                                break;
+                            switch (comandos[1])
+                            {
+                                case "name":
+                                    var resultName = _deviceManager.EditName(comandos[2]);
+                                    Console.WriteLine(resultName ? "Name updated correctly".Pastel(Color.GreenYellow) : "Error, the name already exist".Pastel(Color.Red));
+                                    break;
+                                case "ip":
+                                    if (!comandos[2].IsValidIpv4()) Console.WriteLine("Invalid IP".Pastel(Color.Red));
+                                    else
+                                    {
+                                        var resultIp = _deviceManager.EditIp(comandos[2]);
+                                        Console.WriteLine(resultIp ? "IP updated correctly".Pastel(Color.GreenYellow) : "Error, the IP already exist".Pastel(Color.Red));
+                                    }
+                                    break;
+                                case "subnetmask":
+                                    if (!int.TryParse(comandos[2], out var mask))
+                                    {
+                                        Console.WriteLine("The subnet mask format is a number in 1..24");
+                                        break;
+                                    }
+                                    if (mask > 0 && mask <= 24)
+                                    {
+                                        _deviceManager.EditSubnetMask(comandos[2]);
+                                        Console.WriteLine("SubnetMask updated correctly".Pastel(Color.GreenYellow));
+                                    }
+                                    break;
+                                default:
+                                    WriteLine("Unknown command: " + comandos[2].PastelUnderLine(Color.Red));
+                                    break;
+                            }
                         }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Bad command sequence, please see " +
+                                          "help".PastelUnderLine(Color.DodgerBlue) + " or " +
+                                          "--h".PastelUnderLine(Color.Purple));
                     }
 
                     break;
@@ -184,7 +210,7 @@ namespace PacketTracerSimulator
                     _deviceManager.Devices.Clear();
                     _deviceManager.SelectedDevice = null;
                     break;
-                case "list-saved-sessions":
+                case "list-saves":
                     Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "\\saves\\", "*.json")
                         .ToList().ForEach(x => Console.WriteLine(Path.GetFileNameWithoutExtension(x)));
                     break;
@@ -211,7 +237,6 @@ namespace PacketTracerSimulator
                             Console.WriteLine("Unknown command: " + comandos[1].PastelInverse(Color.Red));
                             break;
                     }
-
                     break;
                 case "exit":
                     Environment.Exit(0);

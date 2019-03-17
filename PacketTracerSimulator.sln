@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PacketTracerSimulator", "PacketTracerSimulator\PacketTracerSimulator.csproj", "{5F1A02DE-E69D-4C26-A158-EA2894A7D2DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pastel", "..\Pastel\src\Pastel.csproj", "{572A83E9-CEC3-40B6-A18C-AC0648CE358D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{5F1A02DE-E69D-4C26-A158-EA2894A7D2DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F1A02DE-E69D-4C26-A158-EA2894A7D2DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F1A02DE-E69D-4C26-A158-EA2894A7D2DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{572A83E9-CEC3-40B6-A18C-AC0648CE358D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{572A83E9-CEC3-40B6-A18C-AC0648CE358D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{572A83E9-CEC3-40B6-A18C-AC0648CE358D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{572A83E9-CEC3-40B6-A18C-AC0648CE358D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

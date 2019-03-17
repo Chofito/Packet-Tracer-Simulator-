@@ -28,19 +28,20 @@ namespace PacketTracerSimulator.Controllers
             if (temp == null) return false;
 
             Devices.RemoveAll(x => x.Name == name);
+            SelectedDevice = null;
             return true;
         }
 
         public void ListAllDevices()
         {
-            Devices.ForEach(x =>{Console.WriteLine("Device Name: " + x.Name + " ||" + " Type: " + x.Type.GetDescription() +  " ||" + " IP: " + x.Ipv4);});
+            Devices.ForEach(x =>{Console.WriteLine("Device Name: " + x.Name + " ||" + " Type: " + x.Type.GetDescription() +  " ||" + " IP: " + x.Ipv4.Ip);});
         }
 
         public void ListRouters()
         {
             Devices.Where(x => x.Type == TypeOfDevice.Router).ToList().ForEach(x =>
             {
-                Console.WriteLine("Device Name: " + x.Name + " IP: " + x.Ipv4);
+                Console.WriteLine("Device Name: " + x.Name + " IP: " + x.Ipv4.Ip);
             });
         }
 
@@ -48,7 +49,7 @@ namespace PacketTracerSimulator.Controllers
         {
             Devices.Where(x => x.Type == TypeOfDevice.Switch).ToList().ForEach(x =>
             {
-                Console.WriteLine("Device Name: " + x.Name + " IP: " + x.Ipv4);
+                Console.WriteLine("Device Name: " + x.Name + " IP: " + x.Ipv4.Ip);
             });
         }
 
@@ -56,7 +57,7 @@ namespace PacketTracerSimulator.Controllers
         {
             Devices.Where(x => x.Type == TypeOfDevice.Pc).ToList().ForEach(x =>
             {
-                Console.WriteLine("Device Name: " + x.Name + " IP: " + x.Ipv4);
+                Console.WriteLine("Device Name: " + x.Name + " IP: " + x.Ipv4.Ip);
             });
         }
 
@@ -80,19 +81,31 @@ namespace PacketTracerSimulator.Controllers
             throw new System.NotImplementedException();
         }
 
-        public bool EditDevice(Device data)
+        public bool EditName(string newName)
         {
-            var temp = Devices.FirstOrDefault(x => x.Name == data.Name || x.Ipv4.Ip == data.Ipv4.Ip);
-            if (temp != null) return false;
+            var exist = Devices.FirstOrDefault(x => x.Name == newName);
+            if (exist != null) return false;
 
-            var index = Devices.FindIndex(x => x.Name == SelectedDevice.Name);
-            Devices[index] = data;
+            Devices.Where(x => x.Name == SelectedDevice.Name).ToList().ForEach(x => x.Name = newName);
+            SelectedDevice.Name = newName;
             return true;
         }
 
-        public bool SaveSession(string fileName)
+        public bool EditIp(string newIp)
         {
-            throw new System.NotImplementedException();
+            var exist = Devices.FirstOrDefault(x => x.Ipv4.Ip == newIp);
+            if (exist != null) return false;
+
+            Devices.Where(x => x.Name == SelectedDevice.Name).ToList().ForEach(x => x.Ipv4.Ip = newIp);
+            SelectedDevice.Ipv4.Ip = newIp;
+            return true;
+        }
+
+        public bool EditSubnetMask(string newSM)
+        {
+            Devices.Where(x => x.Name == SelectedDevice.Name).ToList().ForEach(x => x.Ipv4.SubnetMask = newSM);
+            SelectedDevice.Ipv4.SubnetMask = newSM;
+            return true;
         }
     }
 }

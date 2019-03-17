@@ -78,7 +78,10 @@ namespace PacketTracerSimulator.Controllers
 
         public bool ConnectTo(string to)
         {
-            throw new System.NotImplementedException();
+            var exist = Devices.FirstOrDefault(x => x.Name == to);
+            if (exist != null) return false;
+            Devices.Where(x => x.Name == SelectedDevice.Name).ToList().ForEach(x => x.Name = to);
+            return true;
         }
 
         public bool EditName(string newName)

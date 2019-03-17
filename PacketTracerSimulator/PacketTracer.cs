@@ -139,6 +139,21 @@ namespace PacketTracerSimulator
                     break;
                 case "ping":
                     break;
+                case "connect":
+                    if (comandos.Length == 2)
+                    {
+                        if (_deviceManager.SelectedDevice != null)
+                        {
+                            _deviceManager.ConnectTo(comandos[1]);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Bad command sequence, please see " +
+                                          "help".PastelUnderLine(Color.DodgerBlue) + " or " +
+                                          "--h".PastelUnderLine(Color.Purple));
+                    } 
+                    break;
                 case "save":
                     if (comandos.Length == 2)
                     {

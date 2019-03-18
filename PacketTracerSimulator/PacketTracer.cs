@@ -68,6 +68,7 @@ namespace PacketTracerSimulator
                         _temporalDevice.Name = comandos[2];
                         _temporalDevice.MacAddress = RandomString(48);
                         _temporalDevice.Ipv4 = new Ipv4(){Ip = "", SubnetMask = ""};
+                        _temporalDevice.Connections = new List<string>();
                         _deviceManager.AddDevice(_temporalDevice);
                     }
                     else
@@ -138,13 +139,16 @@ namespace PacketTracerSimulator
 
                     break;
                 case "ping":
+                    _deviceManager.TempDevice = _deviceManager.SelectedDevice;
+                    Console.WriteLine(_deviceManager.Ping(comandos[1]) ? "Ping exitoso".Pastel(Color.GreenYellow) : "El dispositivo no se encuentra en la red".Pastel(Color.OrangeRed));
                     break;
                 case "connect":
                     if (comandos.Length == 2)
                     {
                         if (_deviceManager.SelectedDevice != null)
                         {
-                            _deviceManager.ConnectTo(comandos[1]);
+                            var result = _deviceManager.ConnectTo(comandos[1]);
+                            Console.WriteLine(result ? "Conexion exitosa".Pastel(Color.GreenYellow) : "Revise que el dispositivo exista y que no haya alcanzado el maximo de conexiones".Pastel(Color.OrangeRed));
                         }
                     }
                     else
@@ -163,7 +167,7 @@ namespace PacketTracerSimulator
                             var onlyRouters = _deviceManager.Devices.Where(x => x.Type == TypeOfDevice.Router);
                             var onlySwitches = _deviceManager.Devices.Where(x => x.Type == TypeOfDevice.Switch);
                             File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "\\saves\\" + comandos[1] + ".json",
-                                JsonConvert.SerializeObject(new {onlyPc, onlySwitches, onlyRouters}));
+                                JsonConvert.SerializeObject(new {onlyPc, onlySwitches, onlyRouters}, Formatting.Indented));
                         }
                         else
                         {
